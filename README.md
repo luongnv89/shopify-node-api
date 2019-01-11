@@ -1,4 +1,4 @@
-shopify-node-api
+shopify-node-api [![Build Status](https://travis-ci.org/christophergregory/shopify-node-api.svg?branch=master)](https://travis-ci.org/christophergregory/shopify-node-api)
 ================
 
 OAuth2 Module for Shopify API
@@ -214,6 +214,32 @@ var config = {
 }
 ```
 
+##### Additional Verbose Options
+
+If only a particular message type(s) is desired it may be specifically requested
+to override the standard verbose console logging.
+
+Available logging options:
+    * verbose_status
+    * verbose_headers
+    * verbose_api_limit
+    * verbose_body
+
+```js
+var config = {
+  ...
+  verbose_headers: true,
+  verbose_api_limit: true
+}
+```
+
+The above config results in only messages beginning as type __HEADER:__ and
+__API_LIMIT:__ to be logged.
+
+This is a more ideal use case for a production server, where excessive
+body content logging may obstruct developers from isolating meaningful server
+data.
+
 ### Verify Shopify Request
 
 **Note**: *This module has been updated to use HMAC parameter instead of the deprecated "signature"*.
@@ -258,6 +284,17 @@ var config = {
   //...
   rate_limit_delay: 10000, // 10 seconds (in ms) => if Shopify returns 429 response code
   backoff: 35, // limit X of 40 API calls => default is 35 of 40 API calls
+  backoff_delay: 1000 // 1 second (in ms) => wait 1 second if backoff option is exceeded
+}
+```
+
+Alternatively if you are working on a Shopify Plus or Gold project or if you get increased API limits from your Shopify rep you can use 'backoff_level' to specify at what fraction of bucket capacity your app should start backing off.
+
+```js
+var config = {
+  //...
+  rate_limit_delay: 10000, // 10 seconds (in ms) => if Shopify returns 429 response code
+  backoff_level: 0.85, // limit X/bucket size API calls => no default since 'backoff' is the default behaviour
   backoff_delay: 1000 // 1 second (in ms) => wait 1 second if backoff option is exceeded
 }
 ```
